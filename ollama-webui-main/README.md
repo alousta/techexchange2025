@@ -30,12 +30,12 @@ git clone https://github.com/alousta/techexchange2025.git
 cd techexchange2025/ollama-webui-main
 ```
 
-Watch and follow the video oc.login.mp4 to login into the openshift cluster via CLI (Command Line Interface)
+Watch and follow the video oc.login.mp4 you just clone and downloaded it in your device to login into the openshift cluster via CLI (Command Line Interface)
 -----
 
 ## Step 1: Create a Project and Find the Security Context
 
-First, create a new project and then determine the allowed `fsGroup` value for that project. OpenShift uses this value to grant a pod's containers write access to mounted volumes. Add -YOURINITIALS at the end of the project name. For example, oc new-project ollama-webui-al.
+First, create a new project and then determine the allowed `fsGroup` value for that project. OpenShift uses this value to grant a pod's containers write access to mounted volumes. Add -YOURINITIALS-XX (where XX is your student number) at the end of the project name. For example, oc new-project ollama-webui-al.
 
 ### Create a new OpenShift project:
 

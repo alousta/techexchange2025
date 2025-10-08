@@ -8,6 +8,7 @@ First, ensure you have **both Ollama and OpenWebUI installed and running**. That
 * **Install OpenWebUI:** You can install it separately or use an image that includes both. For example, ghcr.io/open-webui/open-webui:ollama is a popular choice for an integrated setup.  
 * **Verify Connection:** Make sure your OpenWebUI instance is successfully connected to the Ollama backend. You can usually check this in the Admin Panel settings, where you can verify the Ollama API address.
 
+Watch the "Adding Ollama API Endpoint to OpenWebUI.mp4" video and follow up in your OpenWebUI installed application.
 ---
 
 ### **1\. Create a Knowledge Base**
