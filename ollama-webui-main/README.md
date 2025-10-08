@@ -1,7 +1,7 @@
 
 # Deploying Ollama and Open WebUI on OpenShift
 
-This guide provides a comprehensive and tested method for deploying **Ollama** and **Open WebUI** in the same OpenShift project. This approach resolves common permission-related issues by correctly configuring storage and security contexts.
+This guide provides a comprehensive and tested method for deploying **Ollama** and **Open WebUI** in the same OpenShift project. This approach resolves common permission-related issues by correctly configuring storage and security contexts. The following steps are executed in a terminal CLI window in your device.
 
 ## Prerequisites
 
@@ -12,9 +12,22 @@ For Mac and Linux, run the following command to install the CLIs:
 ```bash
 curl -sL https://ibm.biz/idt-installer | bash
 ```
+```bash
+sudo apt-get update
+sudo apt-get install git
+```
 For Windows 10 Pro, run the following command as an administrator in PowerShell:
 ```bash
 [Net.ServicePointManager]::SecurityProtocol = "Tls12"; iex(New-Object Net.WebClient).DownloadString('https://ibm.biz/idt-win-installer')
+```
+```bash
+winget install -e --id Git.Git
+```
+
+clone the workshop repo.
+```bash
+git clone https://github.com/alousta/techexchange2025.git
+cd techexchange2025/ollama-webui-main
 ```
 
 Watch and follow the video oc.login.mp4 to login into the openshift cluster via CLI (Command Line Interface)
