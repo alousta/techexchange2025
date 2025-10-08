@@ -13,6 +13,8 @@ Watch the "Adding Ollama API Endpoint to OpenWebUI.mp4" video and follow up in y
 
 ### **1\. Create a Knowledge Base**
 
+All instructions below are followed in the video Adding "MFT RAG to Your Local LLM.mp4". Please watch it and follow on.
+
 A knowledge base is where you'll store all the documents you want your LLM to "know" about.
 
 * On the left sidebar of the OpenWebUI interface, click **Workspace**.  
