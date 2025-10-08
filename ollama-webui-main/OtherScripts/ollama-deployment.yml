@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  labels:
+    app: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      securityContext:
+        fsGroup: 1001020000
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+        env:
+        - name: HOME
+          value: "/opt/ollama"
+        - name: OLLAMA_MODELS
+          value: "/opt/ollama/models"
+        volumeMounts:
+        - name: ollama-storage
+          mountPath: /opt/ollama
+      volumes:
+      - name: ollama-storage
+        persistentVolumeClaim:
+          claimName: ollama-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-service
+  labels:
+    app: ollama
+spec:
+  ports:
+  - port: 11434
+    targetPort: 11434
+  selector:
+    app: ollama
+  type: ClusterIP

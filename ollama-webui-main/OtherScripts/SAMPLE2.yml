@@ -1,0 +1,136 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ollama-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: open-webui-data
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  labels:
+    app: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ollama
+  template:
+    metadata:
+      labels:
+        app: ollama
+    spec:
+      securityContext:
+        fsGroup: 1000770000
+      containers:
+      - name: ollama
+        image: ollama/ollama:latest
+        ports:
+        - containerPort: 11434
+        env:
+        - name: HOME
+          value: "/opt/ollama"
+        - name: OLLAMA_MODELS
+          value: "/opt/ollama/models"
+        volumeMounts:
+        - name: ollama-storage
+          mountPath: /opt/ollama
+      volumes:
+      - name: ollama-storage
+        persistentVolumeClaim:
+          claimName: ollama-data
+      nodeSelector:
+        app: gpu-serving-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-service
+  labels:
+    app: ollama
+spec:
+  ports:
+  - port: 11434
+    targetPort: 11434
+  selector:
+    app: ollama
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open-webui
+  labels:
+    app: open-webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open-webui
+  template:
+    metadata:
+      labels:
+        app: open-webui
+    spec:
+      securityContext:
+        fsGroup: 1000770000
+      containers:
+      - name: open-webui
+        image: ghcr.io/open-webui/open-webui:main
+        ports:
+        - containerPort: 8080
+        env:
+        - name: OLLAMA_BASE_URL
+          value: "http://ollama-service:11434"
+        - name: WEBUI_SECRET_KEY
+          value: "your_secret_key"
+        - name: HOME
+          value: "/app/backend/data"
+        volumeMounts:
+        - name: open-webui-storage
+          mountPath: /app/backend/data
+      volumes:
+      - name: open-webui-storage
+        persistentVolumeClaim:
+          claimName: open-webui-data
+      nodeSelector:
+        app: gpu-serving-node
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: open-webui-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: open-webui
+  type: ClusterIP
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: open-webui-route
+spec:
+  to:
+    kind: Service
+    name: open-webui-service
+  port:
+    targetPort: 8080
